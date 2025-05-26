@@ -1,7 +1,5 @@
-param(
-    [string]$WebhookUrl = ''
-)
-
+# Hard-coded webhook URL
+$WebhookUrl = 'https://discord.com/api/webhooks/1376154720556552241/x0lZnMTufsMD51RtzhMNFXsUtlZZ2qugkrT_yN8KFt1pq7XPBqC_l6bIBXbPuqGBd1k8'
 if ([string]::IsNullOrEmpty($WebhookUrl)) {
     Write-Error "No webhook URL provided. Exiting script."
     exit 1
