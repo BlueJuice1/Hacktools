@@ -316,5 +316,3 @@ Get-ChildItem -Path $tempDir | ForEach-Object {
 }
 
 Write-Host "Done."
-Start-Sleep -Seconds 5
-Read-Host "Script finished. Press Enter to exit"
