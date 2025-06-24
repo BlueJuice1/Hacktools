@@ -1,6 +1,5 @@
 # Get webhook URL from environment variable
 $WebhookUrl = $env:DISCORD_WEBHOOK_URL
-Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "🚀 Script started successfully on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
 if ([string]::IsNullOrEmpty($WebhookUrl)) {
     Write-Error "No webhook URL provided. Set the DISCORD_WEBHOOK_URL environment variable before running the script."
     exit 1
