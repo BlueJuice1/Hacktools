@@ -1,8 +1,8 @@
-# Hard-coded webhook URL
-$WebhookUrl = 'https://discord.com/api/webhooks/1376154720556552241/x0lZnMTufsMD51RtzhMNFXsUtlZZ2qugkrT_yN8KFt1pq7XPBqC_l6bIBXbPuqGBd1k8'
+# Get webhook URL from environment variable
+$WebhookUrl = $env:DISCORD_WEBHOOK_URL
 
 if ([string]::IsNullOrEmpty($WebhookUrl)) {
-    Write-Error "No webhook URL provided. Exiting script."
+    Write-Error "No webhook URL provided. Set the DISCORD_WEBHOOK_URL environment variable before running the script."
     exit 1
 }
 
