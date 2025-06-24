@@ -41,7 +41,6 @@ Read-Host 'Press Enter to exit'
     }
 }
 
-
 # URLs for SQLite DLLs (64-bit)
 $sqliteInteropUrl = "https://github.com/BlueJuice1/Hacktools/releases/download/V1.0/SQLite.Interop.dll"
 $sqliteNetUrl = "https://github.com/BlueJuice1/Hacktools/releases/download/V1/System.Data.SQLite.dll"
