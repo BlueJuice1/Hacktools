@@ -6,6 +6,10 @@ if ([string]::IsNullOrEmpty($webhookUrl)) {
     exit 1
 }
 
+Invoke-RestMethod -Uri $env:DISCORD_WEBHOOK_URL -Method Post -Body (@{
+    content = "Script started on $env:COMPUTERNAME"
+} | ConvertTo-Json) -ContentType 'application/json'
+
 # Check current PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Check if pwsh is available
